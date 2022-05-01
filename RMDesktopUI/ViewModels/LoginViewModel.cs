@@ -12,9 +12,9 @@ namespace RMDesktopUI.ViewModels
 {
     public class LoginViewModel : Screen
     {
-        private string _userName;
+        private string _userName = "iman@basaif.com";
 
-        private string _password;
+        private string _password = "Im1234$";
 
         private string _errorMessage;
 

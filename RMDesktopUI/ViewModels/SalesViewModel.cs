@@ -15,11 +15,13 @@ namespace RMDesktopUI.ViewModels
     {
         private IProductEndpoint _productEndpoint;
         private IConfigHelper _configHelper;
+        private ISaleEndpoint _saleEndpoint;
 
-        public SalesViewModel(IProductEndpoint productEndpoint, IConfigHelper configHelper)
+        public SalesViewModel(IProductEndpoint productEndpoint, IConfigHelper configHelper, ISaleEndpoint saleEndpoint)
         {
             _productEndpoint = productEndpoint;
             _configHelper = configHelper;
+            _saleEndpoint = saleEndpoint;
         }
 
         protected async override void OnViewLoaded(object view)
@@ -163,9 +165,11 @@ namespace RMDesktopUI.ViewModels
             
             SelectedProduct.QuantityInStock -= ItemQuantity;
             ItemQuantity = 1;
+
             NotifyOfPropertyChange(() => SubTotal);
             NotifyOfPropertyChange(() => Tax);
             NotifyOfPropertyChange(() => Total);
+            NotifyOfPropertyChange(() => CanCheckOut);
 
         }
         public bool CanAddToCart
@@ -187,6 +191,7 @@ namespace RMDesktopUI.ViewModels
             NotifyOfPropertyChange(() => SubTotal);
             NotifyOfPropertyChange(() => Tax);
             NotifyOfPropertyChange(() => Total);
+            NotifyOfPropertyChange(() => CanCheckOut);
         }
 
         public bool CanRemoveFromCart
@@ -199,9 +204,20 @@ namespace RMDesktopUI.ViewModels
             }
         }
 
-        public void CheckOut()
+        public async Task CheckOut()
         {
+            SaleModel sale = new SaleModel();
 
+            foreach (var item in Cart)
+            {
+                sale.SaleDetails.Add(new SaleDetialModel
+                {
+                    ProductId = item.Product.Id,
+                    Quantity = item.QuantityInCart
+                });
+            }
+
+            await _saleEndpoint.PostSale(sale);
         }
 
         public bool CanCheckOut
@@ -209,6 +225,11 @@ namespace RMDesktopUI.ViewModels
             get
             {
                 bool output = false;
+
+                if (Cart.Count > 0)
+                {
+                    output = true;
+                }
 
                 return output;
             }
