@@ -42,6 +42,17 @@ namespace RMDesktopUI.ViewModels
             Products = new BindingList<ProductDisplayModel>(products);
         }
 
+        private async Task ResetSalesViewModel()
+        {
+            Cart = new BindingList<CartItemDisplayModel>();
+            await LoadProducts();
+
+            NotifyOfPropertyChange(() => SubTotal);
+            NotifyOfPropertyChange(() => Tax);
+            NotifyOfPropertyChange(() => Total);
+            NotifyOfPropertyChange(() => CanCheckOut);
+        }
+
         private BindingList<ProductDisplayModel> _products;
 
         public BindingList<ProductDisplayModel> Products
@@ -217,6 +228,7 @@ namespace RMDesktopUI.ViewModels
             NotifyOfPropertyChange(() => Tax);
             NotifyOfPropertyChange(() => Total);
             NotifyOfPropertyChange(() => CanCheckOut);
+            NotifyOfPropertyChange(() => CanAddToCart);
         }
 
         public bool CanRemoveFromCart
@@ -238,7 +250,7 @@ namespace RMDesktopUI.ViewModels
         {
             SaleModel sale = new SaleModel();
 
-            foreach (var item in Cart)
+            foreach (CartItemDisplayModel item in Cart)
             {
                 sale.SaleDetails.Add(new SaleDetialModel
                 {
@@ -248,6 +260,8 @@ namespace RMDesktopUI.ViewModels
             }
 
             await _saleEndpoint.PostSale(sale);
+
+            await ResetSalesViewModel();
         }
 
         public bool CanCheckOut
