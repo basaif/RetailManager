@@ -36,6 +36,11 @@ namespace RMDesktopUI.ViewModels
             TryClose();
         }
 
+        public void UserManagement()
+        {
+            ActivateItem(IoC.Get<UserDisplayViewModel>());
+        }
+
         public void LogOut()
         {
             _user.ResetUserModel();
@@ -51,7 +56,8 @@ namespace RMDesktopUI.ViewModels
             NotifyOfPropertyChange(() => IsLoggedIn);
         }
 
-        public bool IsLoggedIn {
+        public bool IsLoggedIn
+        {
             get
             {
                 bool output = false;
@@ -62,7 +68,7 @@ namespace RMDesktopUI.ViewModels
                 }
 
                 return output;
-            } 
+            }
         }
     }
 }
