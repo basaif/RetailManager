@@ -13,6 +13,7 @@ using RMApi.Models;
 using RMDataManager.Library.DataAccess;
 using RMApi.Data;
 using System.Security.Claims;
+using Microsoft.Extensions.Configuration;
 
 namespace RMApi.Controllers
 {
@@ -23,11 +24,13 @@ namespace RMApi.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IConfiguration _config;
 
-        public UserController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public UserController(ApplicationDbContext context, UserManager<IdentityUser> userManager, IConfiguration config)
         {
             _context = context;
             _userManager = userManager;
+            _config = config;
         }
 
         [HttpGet]
@@ -36,7 +39,7 @@ namespace RMApi.Controllers
             //old way - RequestContext.Principal.Identity.GetUserId();
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            UserData data = new UserData();
+            UserData data = new UserData(_config);
 
             return data.GetUserById(userId).First();
         }
