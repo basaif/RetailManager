@@ -59,7 +59,7 @@ namespace RMApi
                     {
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes("TheTokenIsWhereTheSquirrelLikesToHide")),
+                            Encoding.UTF8.GetBytes(Configuration.GetValue<string>("Secrets:SecurityKey"))),
                         ValidateIssuer = false,
                         ValidateAudience = false,
                         ValidateLifetime = true,
