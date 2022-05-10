@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace RMDataManager.Library.Internal.DataAccess
 {
-    internal class SqlDataAccess : IDisposable
+    public class SqlDataAccess : IDisposable, ISqlDataAccess
     {
         public SqlDataAccess(IConfiguration config)
         {
@@ -104,7 +104,7 @@ namespace RMDataManager.Library.Internal.DataAccess
                 {
                     CommitTransaction();
                 }
-                catch 
+                catch
                 {
                     //TODO: Log this issue
                 }
